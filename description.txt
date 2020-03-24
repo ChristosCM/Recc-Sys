@@ -1,0 +1,7 @@
+The system shows the books in the database on the front page. To access rating and recommendation, a user needs to log in or sign up using the navbar. 
+Then the user needs to rate at least 1 book to find their 3(or less if not enough books remaining) recommendations. The user can also log out or visit the accounts page 
+to change password, username or delete the account.
+Most of the website is built around communication with json through ajax requests and responses. Some parts(redirect) and messages also work with just flask and html templates.
+The ratings were done randomly so results may not be accurate (i.e. rating biography books high along with other fantasy books results in getting fantasy books when rating another biography high)
+Ratings are generated using pandas and numpy implementing SVD
+Finally bootstrap was used to improve some visual aspects of the site.

@@ -1,0 +1,130 @@
+<html>
+
+<head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+        $(document).ready(function(){
+            $('#change').submit(function(event){
+                event.preventDefault();
+                $.ajax({
+                    data: {
+                        username: $('#username').val(),
+                    },
+                    type: 'POST',
+                    url: '/changeUsername'
+                })
+                .done(function(){
+
+                });
+
+
+            });
+        });
+        function deleteAcc(){
+            if (confirm("Are you sure you want to delete you account?")){
+                $.ajax({
+                    url:"/deleteAcc",
+                    type:"POST",
+                    data:{"test":"test"},
+                    success(){
+                        if(!alert("Your account has been deleted")){window.location.reload();}
+                    },
+                    error(data){
+                        alert(data.msg)
+                    }
+                })
+            }
+        }
+        $(document).ready(function(){
+            $('#changePass').submit(function(event){
+                event.preventDefault();
+                $.ajax({
+                    data: {
+                        oldPass: $('#oldPass').val(),
+                        newPass: $("#newPass").val(),
+                        type: "changePass"
+                    },
+                    type: 'POST',
+                    url: '/account',
+                    success: (res)=>{
+                        alert(res.msg)
+                        $('#oldPass').val('')
+                        $('#newPass').val('') //clear the text fields
+                        $("#changePassword").collapse()
+                        
+                    }
+                })
+               
+
+
+            });
+        });
+        
+        </script>
+</head>
+<body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" role="navigation">
+                <div class="container">
+                    <a class="navbar-brand" href="#">Books</a>
+                    <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar">
+                        &#9776;
+                    </button>
+                    <div class="collapse navbar-collapse" id="exCollapsingNavbar">
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+                            <li class="nav-item"><a href="/protected" class="nav-link">Profile</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav flex-row justify-content-between ml-auto">
+                            <li class="nav-item"><a href="/" class="nav-link">Account</a></li>
+                            <li class="nav-item"><a href="/logout" class="nav-link">Logout</a></li>
+
+
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+    <br><br><br>
+    <h1>Welcome to your dashboard {{ username }} </h1>
+    <hr>
+    <h3>From here you can edit or delete your profile</h3>
+
+    <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#changeUsername" aria-expanded="false" aria-controls="changeUsername">Change Username</button>
+    <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#changePassword" aria-expanded="false" aria-controls="changePassword">Change Password</button>
+    <button class="btn btn-danger" type="button"  onclick="deleteAcc()">Delete Account</button>
+
+    <div class="collapse col-sm-2" id="changeUsername">
+            <form method="post" name="change" id="change" role="form">
+                    <input type="hidden" name="type" value="username">
+                    <label for="username">New Username</label>
+                <input type="text" class="form-control"name="username" id="username" aria-describedby="usernameHelp" placeholder="Username" required="true">
+                <small id="usernameHelp" class="form-text text-muted">The username used for you to login</small>
+                <button type="submit" class=" btn btn-primary">Change</button>
+        </form>
+    </div>
+    <div class="collapse col-sm-2" id="changePassword" name="changePassword">
+            <form method="post" name="changePass" id="changePass" role="form">
+                    <input type="hidden" name="type" value="password">
+                    <label for="oldPass">Old Password</label>
+                    <input type="password" class="form-control" name="oldPass"id="oldPass" placeholder="Password" required="true">
+                    <label for="newPass">New Password</label>
+                    <input type="password" class="form-control" name="newPass"id="newPass" placeholder="Password" required="true">
+                <button type="submit" class=" btn btn-primary">Change</button>
+        </form>
+    </div>
+    {% with messages = get_flashed_messages() %}
+                  {% if messages %}
+
+                    {% for message in messages %}
+                    <div class="alert" role="alert">
+                            {{message}}
+                          </div>
+                    {% endfor %}
+                  {% endif %}
+                  
+        
+        {% endwith %}
+</body>
+</html>
